@@ -17,19 +17,21 @@ from langchain import LLMChain, PromptTemplate
 from langchain.llms import OpenAI
 
 
-class TestLangChain:
+class TestOpenAISetup:
     """Confirm that the OpenAI package has been installed correctly and its API key is present."""
 
-    def test_model_availability(self):
+    _language_model_names = ["gpt-3.5-turbo", "gpt-4"]
+
+    def test_language_models(self):
         """Run a simple test to ensure each model is available."""
 
-        self._test_2x2(model_name="gpt-3.5-turbo")
-        self._test_2x2(model_name="gpt-4")
+        for language_model_name in self._language_model_names:
+            self._test_2x2(language_model_name=language_model_name)
 
-    def _test_2x2(self, *, model_name: str) -> None:
-        """Simple question to check model availability."""
+    def _test_2x2(self, *, language_model_name: str) -> None:  # noqa to suppress advice to make function static
+        """Simple question to check language model availability."""
 
-        llm = OpenAI(model_name=model_name, temperature=0.)
+        llm = OpenAI(model_name=language_model_name, temperature=0.)
         output = llm("Two times two. Reply with the numerical result only, not a full sentence.")
         assert output == "4"
 
