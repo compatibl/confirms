@@ -31,7 +31,7 @@ class TestOpenAISetup:
     def _test_2x2(self, *, language_model_name: str) -> None:  # noqa to suppress advice to make function static
         """Simple question to check language model availability."""
 
-        llm = OpenAI(model_name=language_model_name, temperature=0.)
+        llm = OpenAI(model_name=language_model_name, temperature=0.0)
         output = llm("Two times two. Reply with the numerical result only, not a full sentence.")
         assert output == "4"
 
