@@ -11,6 +11,7 @@ setuptools.setup(
     version='0.0.1',
     author='The Project Contributors',
     description='Model Governance AI for Trade Confirmations',
+    license='Apache Software License',
     long_description=readme,
     long_description_content_type='text/markdown',
     install_requires=install_requires,
