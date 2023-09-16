@@ -16,15 +16,22 @@ import pytest
 from langchain import LLMChain, PromptTemplate
 from langchain.llms import OpenAI
 
-# Test that LangChain package components were installed correctly and can access the GPU (if available)
 
+class TestLangChain:
+    """Confirm that the OpenAI package has been installed correctly and its API key is present."""
 
-def test_openai():
-    """Test OpenAI model and the presence of OpenAI key."""
+    def test_model_availability(self):
+        """Run a simple test to ensure each model is available."""
 
-    llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0.)
-    output = llm("Two times two. Reply with the numerical result only, not a full sentence.")
-    assert output == "4"
+        self._test_2x2(model_name="gpt-3.5-turbo")
+        self._test_2x2(model_name="gpt-4")
+
+    def _test_2x2(self, *, model_name: str) -> None:
+        """Simple question to check model availability."""
+
+        llm = OpenAI(model_name=model_name, temperature=0.)
+        output = llm("Two times two. Reply with the numerical result only, not a full sentence.")
+        assert output == "4"
 
 
 if __name__ == '__main__':
