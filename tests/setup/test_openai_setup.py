@@ -13,26 +13,17 @@
 # limitations under the License.
 
 import pytest
-from langchain import LLMChain, PromptTemplate
 from langchain.llms import OpenAI
 
 
-class TestOpenAISetup:
-    """Confirm that the OpenAI package has been installed correctly and its API key is present."""
+def test_llm():
+    """Run a simple test to ensure each model is available."""
 
-    _language_model_names = ["gpt-3.5-turbo", "gpt-4"]
-
-    def test_language_models(self):
-        """Run a simple test to ensure each model is available."""
-
-        for language_model_name in self._language_model_names:
-            self._test_2x2(language_model_name=language_model_name)
-
-    def _test_2x2(self, *, language_model_name: str) -> None:  # noqa to suppress advice to make function static
-        """Simple question to check language model availability."""
-
-        llm = OpenAI(model_name=language_model_name, temperature=0.0)
-        output = llm("Two times two. Reply with the numerical result only, not a full sentence.")
+    model_names = ["gpt-3.5-turbo", "gpt-4"]
+    for model_name in model_names:
+        llm = OpenAI(model_name=model_name, temperature=0.0)
+        output = llm("Two times two. Reply with the numerical result only, not a full sentence. "
+                     "Your answer should include no text other than the number.")
         assert output == "4"
 
 
