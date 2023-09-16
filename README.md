@@ -1,4 +1,4 @@
-# Confirms
+# Confirms Package
 ![GitHub](https://img.shields.io/github/license/compatibl/confirms)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/confirms)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/confirms)
@@ -6,10 +6,13 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/compatibl/confirms/pulls)
 ## Overview
 
-The Confirms Package includes open source AI model governance tools for 
-trade confirmations.
+***THIS PACKAGE CONTAINS RESEARCH CODE AND IS NOT INTENDED FOR PRODUCTION USE***
 
-It includes:
+This package contains research code that can perform AI comprehension of trade
+confirmations, model source code, and model documentation for the purposes of
+model governance.
+
+It supports the following use cases:
 
 - Validation of trade capture using LLM comprehension of trade confirmations
 - Validation of model documentation using LLM comprehension of source code
