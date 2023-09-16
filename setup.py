@@ -3,8 +3,8 @@ import setuptools
 with open('./README.md', 'r') as readme_file:
     readme = readme_file.read()
 
-with open('./requirements.txt') as requirements_file:
-    requirements = [line.strip() for line in requirements_file.readlines()]
+with open('./install_requires.txt') as install_requires_file:
+    install_requires = [line.strip() for line in install_requires_file.readlines()]
 
 setuptools.setup(
     name='confirms',
@@ -13,7 +13,7 @@ setuptools.setup(
     description='Model Governance AI for Trade Confirmations',
     long_description=readme,
     long_description_content_type='text/markdown',
-    install_requires=requirements,
+    install_requires=install_requires,
     url='https://github.com/compatibl/confirms',
     project_urls={
         'Source Code': 'https://github.com/compatibl/confirms',

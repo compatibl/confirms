@@ -1,2 +1,13 @@
-langchain>=0.0.285
+# Package installation requirements in setup.py
+-r install_requires.txt
+
+# Development, build and test requirements
+black>=22.6.0
+build>=0.8.0
+flake8>=4.0.1
+isort>=5.10.1
+pytest>=7.4.2
+setuptools>=58.1.0
+twine>=4.0.2
+wheel>=0.38.4
 
