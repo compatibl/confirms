@@ -2,7 +2,6 @@
 
 pushd ..
 
-echo.
 echo Format using isort
 isort confirms --sp=.isort.cfg
 isort tests --sp=.isort.cfg
