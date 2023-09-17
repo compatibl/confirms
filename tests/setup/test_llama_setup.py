@@ -12,63 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
-from huggingface_hub import hf_hub_download
-from langchain import LlamaCpp
-from langchain.callbacks import StreamingStdOutCallbackHandler
-from langchain.callbacks.manager import CallbackManager
 
-_model_names = []
-
-
-def get_llm() -> LlamaCpp:
-    """Create LLM instance."""
-
-    repo_id = "TheBloke/Llama-2-13B-chat-GGUF"
-    model_name = "llama-2-13b-chat.Q4_K_M"
-    model_filename = f"{model_name}.gguf"
-    model_dir = os.path.join(os.path.dirname(__file__), "../../downloads")
-    model_path = os.path.join(model_dir, model_filename)
-    if not os.path.exists(model_path):
-        print(f"Model file {model_filename} not found in `project_root/downloads` directory,"
-              f"downloading from Hugging Face. This can some time depending on network speed.")
-        hf_hub_download(
-            repo_id=repo_id,
-            filename=model_filename,
-            local_dir=model_dir,
-            local_dir_use_symlinks=False
-        )
-
-    callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
-    llm = LlamaCpp(
-        model_path=model_path,
-        temperature=0.0,
-        n_gpu_layers=9999,
-        max_tokens=2000,
-        top_p=0.95,
-        top_k=40,
-        repeat_penalty=1.1,  # This is the default
-        last_n_tokens_size=64,
-        seed=-1,
-        # max_new_tokens=1024,
-        # reset=True,
-        n_batch=8,  # This is the default
-        n_ctx=512,  # This is the default, context window -- check if prev value was correct
-        stop=None,
-        callback_manager=callback_manager,
-        verbose=True,  # Verbose is required to pass to the callback manager
-    )
-    return llm
+from confirms.core.llm.llama_llm import LlamaLlm
 
 
 def test_llm():
     """Run a simple test to ensure the model is available."""
 
-    llm = get_llm()
-    output = llm("What is two times two?")
-    assert output == "\n\nAnswer: Two times two is equal to 4."
+    llama_model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
+    for model_type in llama_model_types:
+        llm = LlamaLlm(model_type=model_type, temperature=0.0)
+        output = llm.completion("What is two times two?")
+        assert output == "\n\nAnswer: Two times two is equal to 4."
 
 
 if __name__ == '__main__':
