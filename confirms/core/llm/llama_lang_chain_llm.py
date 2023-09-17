@@ -24,7 +24,7 @@ from confirms.core.llm.llm import Llm
 
 
 @dataclass
-class LlamaLlm(Llm):
+class LlamaLangChainLlm(Llm):
     """LLAMA 2 models loaded using LangCpp adapter."""
 
     temperature: float = field(default=None)

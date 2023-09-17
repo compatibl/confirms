@@ -19,7 +19,7 @@ from confirms.core.llm.llm import Llm
 
 
 @dataclass
-class GptLlm(Llm):
+class GptLangChainLlm(Llm):
     """GPT LLM family."""
 
     temperature: float = field(default=None)
