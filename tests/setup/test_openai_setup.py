@@ -13,17 +13,18 @@
 # limitations under the License.
 
 import pytest
-from langchain.llms import OpenAI
+
+from confirms.core.llm.gpt_llm import GptLlm
 
 
-def test_llm():
-    """Run a simple test to ensure each model is available."""
+def test_smoke():
+    """Run a smoke test to ensure each model is available."""
 
-    model_names = ["gpt-3.5-turbo", "gpt-4"]
-    for model_name in model_names:
-        llm = OpenAI(model_name=model_name, temperature=0.0)
-        output = llm("Two times two. Reply with the numerical result only, not a full sentence. "
-                     "Your answer should include no text other than the number.")
+    gpt_model_types = ["gpt-3.5-turbo", "gpt-4"]
+    for model_type in gpt_model_types:
+        llm = GptLlm(model_type=model_type, temperature=0.0)
+        output = llm.completion("Two times two. Reply with the numerical result only, not a full sentence. "
+                                "Your answer should include no text other than the number.")
         assert output == "4"
 
 
