@@ -22,7 +22,7 @@ def test_llm():
 
     llama_model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
     for model_type in llama_model_types:
-        llm = LlamaLlm(model_type=model_type, temperature=0.0)
+        llm = LlamaLlm(model_type=model_type, temperature=0.0, seed=0)
         output = llm.completion("What is two times two?")
         assert output == "\n\nAnswer: Two times two is equal to 4."
 

@@ -30,6 +30,9 @@ class LlamaLlm(Llm):
     temperature: float = field(default=None)
     """Model temperature (note that for GPT models zero value does not mean reproducible answers)."""
 
+    seed: int = field(default=None)
+    """Model seed (use the same seed to reproduce the answer)."""
+
     _llm: LlamaCpp = field(default=None)
 
     def load_model(self):
@@ -70,7 +73,7 @@ class LlamaLlm(Llm):
                 top_k=40,
                 repeat_penalty=1.1,  # This is the default
                 last_n_tokens_size=64,
-                seed=-1,
+                seed=self.seed if self.seed is not None else -1,
                 n_batch=8,  # This is the default
                 n_ctx=512,  # This is the default, context window -- check if prev value was correct
                 stop=None,
