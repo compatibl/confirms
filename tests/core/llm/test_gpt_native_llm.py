@@ -28,6 +28,21 @@ def test_smoke():
                                 "Your answer should include no text other than the number.")
         assert output == "4"
 
+def test_function_completion():
+    """Function completion"""
+
+    gpt_model_types = ["gpt-3.5-turbo", "gpt-4"]
+    for model_type in gpt_model_types:
+        question = "Return interest schedule from this description: " \
+                   "First unadjusted payment date is on January 15, 2000, " \
+                   "last unadjusted payment date is on January 15, 2005, and " \
+                   "payment frequency is 6M."
+        llm = GptNativeLlm(model_type=model_type, temperature=0.0)
+        answer = llm.function_completion(question)
+        assert answer["first_unadjusted_payment_date"] == "2000-01-15"
+        assert answer["last_unadjusted_payment_date"] == "2005-01-15"
+        assert answer["payment_frequency"] == "6M"
+
 
 if __name__ == '__main__':
     pytest.main([__file__])

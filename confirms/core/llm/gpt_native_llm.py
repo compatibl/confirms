@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Dict
 
 import openai
 
@@ -60,4 +61,57 @@ class GptNativeLlm(Llm):
         answer = response['choices'][0]['message']['content']
         return answer
 
+    def function_completion(self, question: str, *, prompt: Optional[str] = None) -> Dict[str, str]:
+        """Completion with functions."""
+
+        if prompt is not None:
+            messages = [{"role": "system", "content": prompt}]
+        else:
+            messages = []
+
+        messages = messages + [{"role": "user", "content": question}]
+        functions = [
+            {
+                "name": "get_interest_schedule",
+                "description": "Calculates and returns interest schedule from function parameters",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "first_unadjusted_payment_date": {
+                            "type": "string",
+                            "description": "First unadjusted payment date",
+                        },
+                        "last_unadjusted_payment_date": {
+                            "type": "string",
+                            "description": "Last unadjusted payment date",
+                        },
+                        "payment_frequency": {
+                            "type": "string",
+                            "description": "Payment frequency",
+                            "enum": ["1M", "3M", "6M", "12M"]
+                        },
+                    },
+                    "required": [
+                        "first_unadjusted_payment_date",
+                        "last_unadjusted_payment_date",
+                        "payment_frequency"
+                    ],
+                },
+            }
+        ]
+        response = openai.ChatCompletion.create(
+            model=self.model_type,
+            messages=messages,
+            functions=functions,
+            function_call="auto",  # auto is default, but we'll be explicit
+        )
+        response_message = response["choices"][0]["message"]
+
+        if response_message.get("function_call"):
+            function_name = response_message["function_call"]["name"]
+            result = json.loads(response_message["function_call"]["arguments"])
+            result["function"] = function_name
+            return result
+        else:
+            raise RuntimeError("No functions called in response to message.")
 
