@@ -14,18 +14,20 @@
 
 from dataclasses import dataclass, field
 from typing import Optional
-from langchain import OpenAI
+
+import openai
+
 from confirms.core.llm.llm import Llm
 
 
 @dataclass
-class GptLangChainLlm(Llm):
-    """GPT model family using LangChain wrapper around the native OpenAI API."""
+class GptNativeLlm(Llm):
+    """GPT model family using native OpenAI API."""
 
     temperature: float = field(default=None)
     """Model temperature (note that for GPT models zero value does not mean reproducible answers)."""
 
-    _llm: OpenAI = field(default=None)
+    _llm: bool = field(default=None)
 
     def load_model(self):
         """Load model after fields have been set."""
@@ -35,20 +37,27 @@ class GptLangChainLlm(Llm):
 
             gpt_model_types = ["gpt-3.5-turbo", "gpt-4"]
             if self.model_type not in gpt_model_types:
-                raise RuntimeError(f"GPT LangChain LLM model type {self.model_type} is not recognized. "
+                raise RuntimeError(f"GPT Native LLM model type {self.model_type} is not recognized. "
                                    f"Valid model types are {gpt_model_types}")
 
-            self._llm = OpenAI(
-                model_name=self.model_type,
-                temperature=self.temperature if self.temperature is not None else 0.0
-            )
+            # Native OpenAI API calls are stateless. This means no object is needed at this time.
+            self._llm = True
 
     def completion(self, question: str, *, prompt: Optional[str] = None) -> str:
         """Simple completion with optional prompt."""
 
-        # Load model (multiple calls do not need to reload)
-        self.load_model()
+        if prompt is not None:
+            messages = [{"role": "system", "content": prompt}]
+        else:
+            messages = []
 
-        # TODO - No prompt yet
-        answer = self._llm(question)
+        messages = messages + [{"role": "user", "content": question}]
+
+        response = openai.ChatCompletion.create(
+            model=self.model_type,
+            messages=messages
+        )
+        answer = response['choices'][0]['message']['content']
         return answer
+
+

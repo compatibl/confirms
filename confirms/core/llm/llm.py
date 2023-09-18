@@ -25,8 +25,8 @@ class Llm(ABC):
     """Identifies LLM type and settings."""
 
     model_type: str = field(default=None)
-    """LLM type in the format accepted by the vendor API (e.g. GPT-4) or name of the file from which 
-    the LLM is loaded including extension (e.g. llama-2-13b-chat.Q4_K_M.gguf)."""
+    """LLM type in the format accepted by the vendor API (e.g. `gpt-4`) or name of the file from which 
+    the LLM is loaded including extension (e.g. `llama-2-13b-chat.Q4_K_M.gguf`)."""
 
     @abstractmethod
     def load_model(self):
