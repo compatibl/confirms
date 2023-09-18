@@ -76,7 +76,7 @@ class LlamaLangChainLlm(Llm):
             self._llm = LlamaCpp(
                 model_path=model_path,
                 temperature=0.0,
-                n_gpu_layers=9999,
+                n_gpu_layers=0,  # Change to the value appropriate for the GPU RAM size if using GPU
                 max_tokens=2000,
                 top_p=0.95,
                 top_k=40,
