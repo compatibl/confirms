@@ -79,15 +79,15 @@ class GptNativeLlm(Llm):
                     "properties": {
                         "first_unadjusted_payment_date": {
                             "type": "string",
-                            "description": "First unadjusted payment date",
+                            "description": "First unadjusted payment date using ISO 8601 date format yyyy-mm-dd.",
                         },
                         "last_unadjusted_payment_date": {
                             "type": "string",
-                            "description": "Last unadjusted payment date",
+                            "description": "Last unadjusted payment date using ISO 8601 date format yyyy-mm-dd.",
                         },
                         "payment_frequency": {
                             "type": "string",
-                            "description": "Payment frequency",
+                            "description": "Payment frequency expressed as the number of months followed by capital M",
                             "enum": ["1M", "3M", "6M", "12M"]
                         },
                     },
