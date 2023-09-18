@@ -28,6 +28,7 @@ def test_smoke():
                                 "Your answer should include no text other than the number.")
         assert output == "4"
 
+
 def test_function_completion():
     """Function completion"""
 

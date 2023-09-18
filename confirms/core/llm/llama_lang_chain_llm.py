@@ -33,9 +33,12 @@ class LlamaLangChainLlm(Llm):
     seed: int = field(default=None)
     """Model seed (use the same seed to reproduce the answer)."""
 
+    grammar_file: str = field(default=None)
+    """Grammar filename including extension located in project_root/grammar directory."""
+
     _llm: LlamaCpp = field(default=None)
 
-    def load_model(self):
+    def load_model(self, grammar_name: str = None):
         """Load model after fields have been set."""
 
         # Skip if already loaded
@@ -63,6 +66,12 @@ class LlamaLangChainLlm(Llm):
                     local_dir_use_symlinks=False
                 )
 
+            if self.grammar_file is not None:
+                grammar_dir = os.path.join(os.path.dirname(__file__), "../../../grammar")
+                grammar_path = os.path.join(grammar_dir, self.grammar_file)
+            else:
+                grammar_path = None
+
             callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
             self._llm = LlamaCpp(
                 model_path=model_path,
@@ -77,6 +86,7 @@ class LlamaLangChainLlm(Llm):
                 n_batch=8,  # This is the default
                 n_ctx=512,  # This is the default, context window -- check if prev value was correct
                 stop=None,
+                grammar_path=grammar_path,
                 callback_manager=callback_manager,
                 verbose=True,  # Verbose is required to pass to the callback manager
             )
