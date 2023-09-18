@@ -1,9 +1,4 @@
-root           ::= "{" pair "," pair "," pair "}"
-
-pair           ::= key ":" value
-
-key            ::= "first_unadjusted_payment_date" | "last_unadjusted_payment_date" | "payment_frequency"
-value          ::= [^\n]+ "\n"
-
+root           ::= "first_unadjusted_payment_date=" date ",last_unadjusted_payment_date=" date ",payment_frequency=" freq
+freq		   ::= "1M" | "3M" | "6M" | "12M"
+date		   ::= digit digit digit digit "-" digit digit "-" digit digit
 digit          ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-
