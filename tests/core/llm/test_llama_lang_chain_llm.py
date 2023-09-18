@@ -32,12 +32,17 @@ def test_function_completion():
 
     llama_model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf", "llama-2-70b-chat.Q4_K_M.gguf"]
     for model_type in llama_model_types:
-        question = "Return interest schedule from this description: " \
-                   "First unadjusted payment date is on January 15, 2000, " \
-                   "last unadjusted payment date is on January 15, 2005, and " \
-                   "payment frequency is 6M."
+        prompt = ("Act as a trade entry specialist whose goal is to extract parameters for a function "
+                  "generating interest rate schedule from the text specified by the user. "
+                  "These parameters are first_unadjusted_payment_date, last_unadjusted_payment_date, and"
+                  "payment_frequency."
+                  "Provide response only using the text specified by the user."
+                  "Do not make up answers. Use ISO 8601 format for dates, namely YYYY-MM-DD, in your answer.")
+        question = ("First unadjusted payment date is on January 15, 2000, "
+                    "last unadjusted payment date is on January 15, 2005, and "
+                    "payment frequency is 6M.")
         llm = LlamaLangChainLlm(model_type=model_type, temperature=0.0, grammar_file="payment_schedule_params.gbnf")
-        answer = llm.completion(question)
+        answer = llm.completion(question, prompt=prompt)
         pass
         # assert answer["first_unadjusted_payment_date"] == "2000-01-15"
         # assert answer["last_unadjusted_payment_date"] == "2005-01-15"
