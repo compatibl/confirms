@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from huggingface_hub import hf_hub_download
-from langchain import LlamaCpp
+from langchain import LlamaCpp, PromptTemplate, LLMChain
 from langchain.callbacks import StreamingStdOutCallbackHandler
 from langchain.callbacks.manager import CallbackManager
 from confirms.core.llm.llm import Llm
@@ -91,12 +91,15 @@ class LlamaLangChainLlm(Llm):
                 verbose=True,  # Verbose is required to pass to the callback manager
             )
 
-    def completion(self, question: str, *, prompt: Optional[str] = None) -> str:
+    def completion(self, question: str, *, prompt: Optional[PromptTemplate] = None) -> str:
         """Simple completion with optional prompt."""
 
         # Load model (multiple calls do not need to reload)
         self.load_model()
 
-        # TODO: No prompt yet
-        answer = self._llm(question)
+        if prompt is None:
+            answer = self._llm(question)
+        else:
+            llm_chain = LLMChain(prompt=prompt, llm=self._llm)
+            answer = llm_chain.run(question)
         return answer
