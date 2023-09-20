@@ -21,7 +21,7 @@ def test_gbnf_enforced_format():
 
     model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]  #, "llama-2-70b-chat.Q4_K_M.gguf"]
     for model_type in model_types:
-        # TODO - implement prompt
+        # TODO: Implement prompt
         question = ("```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, Interest Payment Dates: The 9th "
             "of each January, April, July, and October commencing 9 October 2009 with a final payment on the "
             "Maturity Date.```")
