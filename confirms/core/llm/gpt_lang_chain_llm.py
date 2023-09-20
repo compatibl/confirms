@@ -49,6 +49,6 @@ class GptLangChainLlm(Llm):
         # Load model (multiple calls do not need to reload)
         self.load_model()
 
-        # TODO - No prompt yet
+        # TODO: No prompt yet
         answer = self._llm(question)
         return answer
