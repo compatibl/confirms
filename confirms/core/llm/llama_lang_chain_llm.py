@@ -75,12 +75,12 @@ class LlamaLangChainLlm(Llm):
             callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
             self._llm = LlamaCpp(
                 model_path=model_path,
-                temperature=0.0,
+                temperature=self.temperature if self.temperature is not None else 0.2,
                 n_gpu_layers=0,  # Change to the value appropriate for the GPU RAM size if using GPU
-                max_tokens=2000,
-                top_p=0.95,
-                top_k=40,
-                repeat_penalty=1.1,  # This is the default
+                max_tokens=1024,
+                top_p=0.85,
+                top_k=70,
+                repeat_penalty=1.07,
                 last_n_tokens_size=64,
                 seed=self.seed if self.seed is not None else -1,
                 n_batch=8,  # This is the default
