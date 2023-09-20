@@ -22,19 +22,13 @@ def test_gbnf_enforced_format():
     model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]  #, "llama-2-70b-chat.Q4_K_M.gguf"]
     for model_type in model_types:
         # TODO - implement prompt
-        question = ("First unadjusted payment date is on January 15, 2000, "
-                    "last unadjusted payment date is on January 15, 2005, and "
-                    "payment frequency is semiannual."
-                    )
+        question = ("```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, Interest Payment Dates: The 9th "
+            "of each January, April, July, and October commencing 9 October 2009 with a final payment on the "
+            "Maturity Date.```")
         request = (
-            "<s>[INST] <<SYS>>Act as a trade entry specialist whose goal is to extract only the payment"
-            "frequency from the context."
-            "Answer with payment frequency using strict format based on these examples: "
-            "1D, 2W, 3M, or an empty string. "
-            "NEVER hallucinate the answer - return an empty string if payment frequency is"
-            "not known. \n <</SYS>> \n\n"
-            f"Context: {question}. Only return the helpful answer below and nothing else. Helpful answer:[/INST]")
-        llm = LlamaLangChainLlm(model_type=model_type, temperature=0.0, grammar_file="frequency.gbnf")
+            "<s>[INST] Pay attention and remember information below, which will help to answer the question or imperative after the context ends. "
+            f"Context: {question}. According to only the information in the document sources provided within the context above, the payment frequency is [/INST]")
+        llm = LlamaLangChainLlm(model_type=model_type, temperature=0.2)  # , grammar_file="frequency.gbnf")
         answer = llm.completion(request)
         print(answer)
 
