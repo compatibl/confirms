@@ -1,0 +1,2 @@
+root           ::= freq
+freq		   ::= "1M" | "3M" | "6M" | "12M"

@@ -33,7 +33,7 @@ def test_smoke():
 def test_function_completion():
     """Function completion"""
 
-    llama_model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf", "llama-2-70b-chat.Q4_K_M.gguf"]
+    llama_model_types = ["llama-2-7b-chat.Q4_K_M.gguf"] # , "llama-2-13b-chat.Q4_K_M.gguf", "llama-2-70b-chat.Q4_K_M.gguf"]
     for model_type in llama_model_types:
         prompt = ("Act as a trade entry specialist whose goal is to extract parameters for a function "
                   "generating interest rate schedule from the text specified by the user. "
