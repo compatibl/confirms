@@ -25,7 +25,7 @@ class Llm(ABC):
     """Identifies LLM type and settings."""
 
     model_type: str = field(default=None)
-    """LLM type in the format accepted by the vendor API (e.g. `gpt-4`) or name of the file from which 
+    """LLM type in the format accepted by the vendor API (e.g. `gpt-4`) or name of the file from which
     the LLM is loaded including extension (e.g. `llama-2-13b-chat.Q4_K_M.gguf`)."""
 
     @abstractmethod
@@ -35,4 +35,3 @@ class Llm(ABC):
     @abstractmethod
     def completion(self, question: str, *, prompt: Optional[str] = None) -> str:
         """Simple completion with optional prompt."""
-

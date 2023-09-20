@@ -14,7 +14,7 @@
 
 import json
 from dataclasses import dataclass, field
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 import openai
 
@@ -35,11 +35,12 @@ class GptNativeLlm(Llm):
 
         # Skip if already loaded
         if self._llm is None:
-
             gpt_model_types = ["gpt-3.5-turbo", "gpt-4"]
             if self.model_type not in gpt_model_types:
-                raise RuntimeError(f"GPT Native LLM model type {self.model_type} is not recognized. "
-                                   f"Valid model types are {gpt_model_types}")
+                raise RuntimeError(
+                    f"GPT Native LLM model type {self.model_type} is not recognized. "
+                    f"Valid model types are {gpt_model_types}"
+                )
 
             # Native OpenAI API calls are stateless. This means no object is needed at this time.
             self._llm = True
@@ -54,10 +55,7 @@ class GptNativeLlm(Llm):
 
         messages = messages + [{"role": "user", "content": question}]
 
-        response = openai.ChatCompletion.create(
-            model=self.model_type,
-            messages=messages
-        )
+        response = openai.ChatCompletion.create(model=self.model_type, messages=messages)
         answer = response['choices'][0]['message']['content']
         return answer
 
@@ -88,14 +86,10 @@ class GptNativeLlm(Llm):
                         "payment_frequency": {
                             "type": "string",
                             "description": "Payment frequency expressed as the number of months followed by capital M",
-                            "enum": ["1M", "3M", "6M", "12M"]
+                            "enum": ["1M", "3M", "6M", "12M"],
                         },
                     },
-                    "required": [
-                        "first_unadjusted_payment_date",
-                        "last_unadjusted_payment_date",
-                        "payment_frequency"
-                    ],
+                    "required": ["first_unadjusted_payment_date", "last_unadjusted_payment_date", "payment_frequency"],
                 },
             }
         ]
@@ -114,4 +108,3 @@ class GptNativeLlm(Llm):
             return result
         else:
             raise RuntimeError("No functions called in response to message.")
-

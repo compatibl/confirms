@@ -34,4 +34,3 @@ class FloatingInterestSchedule(InterestSchedule):
 
     adj_end: List[dt.date] = field(default=None)
     """List of adjusted accrual end dates."""
-

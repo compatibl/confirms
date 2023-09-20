@@ -13,21 +13,28 @@
 # limitations under the License.
 
 import pytest
+
 from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
 
 
 def test_gbnf_enforced_format():
     """Function completion with GBNF grammar."""
 
-    model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]  #, "llama-2-70b-chat.Q4_K_M.gguf"]
+    model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]  # , "llama-2-70b-chat.Q4_K_M.gguf"]
     for model_type in model_types:
         # TODO: Implement prompt
-        question = ("```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, Interest Payment Dates: The 9th "
+        question = (
+            "```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, Interest Payment Dates: The 9th "
             "of each January, April, July, and October commencing 9 October 2009 with a final payment on the "
-            "Maturity Date.```")
+            "Maturity Date.```"
+        )
         request = (
-            "<s>[INST] Pay attention and remember information below, which will help to answer the question or imperative after the context ends. "
-            f"Context: {question}. According to only the information in the document sources provided within the context above, the payment frequency is [/INST]")
+            "<s>[INST] Pay attention and remember information below, "
+            "which will help to answer the question or imperative after the context ends. "
+            f"Context: {question}. "
+            f"According to only the information in the document sources provided within the context above, "
+            f"the payment frequency is [/INST]"
+        )
         llm = LlamaLangChainLlm(model_type=model_type, temperature=0.2)  # , grammar_file="frequency.gbnf")
         answer = llm.completion(request)
         print(answer)

@@ -24,8 +24,10 @@ def test_smoke():
     gpt_model_types = ["gpt-3.5-turbo", "gpt-4"]
     for model_type in gpt_model_types:
         llm = GptNativeLlm(model_type=model_type, temperature=0.0)
-        output = llm.completion("Two times two. Reply with the numerical result only, not a full sentence. "
-                                "Your answer should include no text other than the number.")
+        output = llm.completion(
+            "Two times two. Reply with the numerical result only, not a full sentence. "
+            "Your answer should include no text other than the number."
+        )
         assert output == "4"
 
 
@@ -34,10 +36,12 @@ def test_function_completion():
 
     gpt_model_types = ["gpt-3.5-turbo", "gpt-4"]
     for model_type in gpt_model_types:
-        question = "Return interest schedule from this description: " \
-                   "First unadjusted payment date is on January 15, 2000, " \
-                   "last unadjusted payment date is on January 15, 2005, and " \
-                   "payment frequency is 6M."
+        question = (
+            "Return interest schedule from this description: "
+            "First unadjusted payment date is on January 15, 2000, "
+            "last unadjusted payment date is on January 15, 2005, and "
+            "payment frequency is 6M."
+        )
         llm = GptNativeLlm(model_type=model_type, temperature=0.0)
         answer = llm.function_completion(question)
         assert answer["first_unadjusted_payment_date"] == "2000-01-15"

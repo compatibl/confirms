@@ -14,7 +14,9 @@
 
 from dataclasses import dataclass, field
 from typing import Optional
+
 from langchain import OpenAI
+
 from confirms.core.llm.llm import Llm
 
 
@@ -32,15 +34,15 @@ class GptLangChainLlm(Llm):
 
         # Skip if already loaded
         if self._llm is None:
-
             gpt_model_types = ["gpt-3.5-turbo", "gpt-4"]
             if self.model_type not in gpt_model_types:
-                raise RuntimeError(f"GPT LangChain LLM model type {self.model_type} is not recognized. "
-                                   f"Valid model types are {gpt_model_types}")
+                raise RuntimeError(
+                    f"GPT LangChain LLM model type {self.model_type} is not recognized. "
+                    f"Valid model types are {gpt_model_types}"
+                )
 
             self._llm = OpenAI(
-                model_name=self.model_type,
-                temperature=self.temperature if self.temperature is not None else 0.0
+                model_name=self.model_type, temperature=self.temperature if self.temperature is not None else 0.0
             )
 
     def completion(self, question: str, *, prompt: Optional[str] = None) -> str:

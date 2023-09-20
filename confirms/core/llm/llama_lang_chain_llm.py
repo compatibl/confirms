@@ -17,9 +17,10 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from huggingface_hub import hf_hub_download
-from langchain import LlamaCpp, PromptTemplate, LLMChain
+from langchain import LlamaCpp, LLMChain, PromptTemplate
 from langchain.callbacks import StreamingStdOutCallbackHandler
 from langchain.callbacks.manager import CallbackManager
+
 from confirms.core.llm.llm import Llm
 
 
@@ -43,7 +44,6 @@ class LlamaLangChainLlm(Llm):
 
         # Skip if already loaded
         if self._llm is None:
-
             model_filename = self.model_type
             if model_filename.startswith("llama-2-7b-chat."):
                 repo_id = "TheBloke/Llama-2-7B-chat-GGUF"
@@ -57,13 +57,12 @@ class LlamaLangChainLlm(Llm):
             model_dir = os.path.join(os.path.dirname(__file__), "../../../downloads")
             model_path = os.path.join(model_dir, model_filename)
             if not os.path.exists(model_path):
-                print(f"Model file {model_filename} not found in `project_root/downloads` directory,"
-                      f"downloading from Hugging Face. This can some time depending on network speed.")
+                print(
+                    f"Model file {model_filename} not found in `project_root/downloads` directory,"
+                    f"downloading from Hugging Face. This can some time depending on network speed."
+                )
                 hf_hub_download(
-                    repo_id=repo_id,
-                    filename=model_filename,
-                    local_dir=model_dir,
-                    local_dir_use_symlinks=False
+                    repo_id=repo_id, filename=model_filename, local_dir=model_dir, local_dir_use_symlinks=False
                 )
 
             if self.grammar_file is not None:
