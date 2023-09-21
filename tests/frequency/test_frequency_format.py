@@ -17,6 +17,7 @@ from typing import Optional
 
 import pandas as pd
 import pytest
+from langchain import PromptTemplate
 
 from confirms.core.llm.gpt_native_llm import GptNativeLlm
 from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
@@ -25,35 +26,34 @@ from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
 def run_frequency_extraction(*, result_name: str, temperature: Optional[float] = None):
     """Function completion for payment frequency extraction."""
 
+    context = (
+        "```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, "
+        "Interest Payment Dates: The 9th of each January, April, July, and October "
+        "commencing 9 October 2009 with a final payment on the Maturity Date.```"
+    )
+    template = (
+        "<s>[INST] Pay attention and remember information below, "
+        "which will help to answer the question or imperative after the context ends. "
+        "Context: {context}. "
+        "According to only the information in the document sources provided within the context above, "
+        "the payment frequency is [/INST]"
+    )
+
     results = []
     for seed in range(1, 26):
         cur_result = {}
         model_types = ["gpt-3.5-turbo", "gpt-4", "llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
         # , "llama-2-70b-chat.Q4_K_M.gguf"]
         for model_type in model_types:
-            # TODO: Implement prompt
-            question = (
-                "```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, "
-                "Interest Payment Dates: The 9th of each January, April, July, and October "
-                "commencing 9 October 2009 with a final payment on the Maturity Date.```"
-            )
-            request = (
-                "<s>[INST] Pay attention and remember information below, "
-                "which will help to answer the question or imperative after the context ends. "
-                f"Context: {question}. "
-                f"According to only the information in the document sources provided within the context above, "
-                f"the payment frequency is [/INST]"
-            )
             if model_type.startswith("llama"):
-                llm = LlamaLangChainLlm(
-                    model_type=model_type, temperature=temperature, seed=seed
-                )  # , grammar_file="frequency.gbnf")
+                llm = LlamaLangChainLlm(model_type=model_type, temperature=temperature, seed=seed)
             elif model_type.startswith("gpt"):
                 llm = GptNativeLlm(model_type=model_type, temperature=temperature)
             else:
                 raise RuntimeError(f"Unknown model type: {model_type}")
 
-            answer = llm.completion(request)
+            prompt = PromptTemplate(template=template, input_variables=["context"])
+            answer = llm.completion(context, prompt=prompt)
             cur_result[model_type] = answer
         results.append(pd.DataFrame([cur_result]))
 
