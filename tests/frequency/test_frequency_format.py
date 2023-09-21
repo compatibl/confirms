@@ -74,5 +74,31 @@ def test_frequency_extraction_temp08():
     run_frequency_extraction(result_name="frequency_implicit_temp08", temperature=0.8)
 
 
+def test_gbnf_enforced_format():
+    """Function completion with GBNF grammar with input from previous step."""
+
+    results_dir = os.path.join(os.path.dirname(__file__), "../../results")
+    file_path = os.path.join(results_dir, "frequency_implicit.csv")
+    template = (
+        "<s>[INST] Pay attention and remember information below, "
+        "which will help to answer the question or imperative after the context ends. "
+        "Context: {context}. "
+        "According to only the information in the document sources provided within the context above, "
+        "the payment frequency is [/INST]"
+    )
+
+    df = pd.read_csv(file_path)
+    input_data = df['llama-2-7b-chat.Q4_K_M.gguf']
+    model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
+    # , "llama-2-70b-chat.Q4_K_M.gguf"]
+    for model_type in model_types:
+        print(model_type)
+        llm = LlamaLangChainLlm(model_type=model_type, grammar_file="frequency_word.gbnf")
+        for context in input_data:
+            prompt = PromptTemplate(template=template, input_variables=["context"])
+            answer = llm.completion(context, prompt=prompt)
+            print()
+
+
 if __name__ == '__main__':
     pytest.main([__file__])
