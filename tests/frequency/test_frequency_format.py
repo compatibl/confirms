@@ -20,6 +20,7 @@ import pytest
 from langchain import PromptTemplate
 
 from confirms.core.llm.gpt_lang_chain_llm import GptLangChainLlm
+from confirms.core.llm.gpt_native_llm import GptNativeLlm
 from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
 
 
@@ -40,7 +41,7 @@ def run_frequency_extraction(*, result_name: str, temperature: Optional[float] =
     )
 
     results = []
-    for seed in range(1, 2):
+    for seed in range(1, 26):
         cur_result = {}
         model_types = ["gpt-3.5-turbo", "gpt-4", "llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
         # , "llama-2-70b-chat.Q4_K_M.gguf"]
@@ -74,30 +75,47 @@ def test_frequency_extraction_temp08():
     run_frequency_extraction(result_name="frequency_implicit_temp08", temperature=0.8)
 
 
-def test_gbnf_enforced_format():
-    """Function completion with GBNF grammar with input from previous step."""
+def test_logit_processing():
+    """Test function completion with input from previous step."""
 
     results_dir = os.path.join(os.path.dirname(__file__), "../../results")
-    file_path = os.path.join(results_dir, "frequency_implicit.csv")
-    template = (
-        "<s>[INST] Pay attention and remember information below, "
-        "which will help to answer the question or imperative after the context ends. "
-        "Context: {context}. "
-        "According to only the information in the document sources provided within the context above, "
-        "the payment frequency is [/INST]"
-    )
+    file_path = os.path.join(results_dir, "frequency_explicit.csv")
 
     df = pd.read_csv(file_path)
     input_data = df['llama-2-7b-chat.Q4_K_M.gguf']
-    model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
-    # , "llama-2-70b-chat.Q4_K_M.gguf"]
+
+    results = [input_data]
+    model_types = ["gpt-3.5-turbo", "gpt-4", "llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
     for model_type in model_types:
-        print(model_type)
-        llm = LlamaLangChainLlm(model_type=model_type, grammar_file="frequency_word.gbnf")
+        current_result = []
+        if model_type.startswith("llama"):
+            llm = LlamaLangChainLlm(model_type=model_type, grammar_file="frequency_word.gbnf")
+        elif model_type.startswith("gpt"):
+            llm = GptNativeLlm(model_type=model_type, temperature=0.0)
+        else:
+            raise RuntimeError(f"Unknown model type: {model_type}")
         for context in input_data:
-            prompt = PromptTemplate(template=template, input_variables=["context"])
-            answer = llm.completion(context, prompt=prompt)
-            print()
+            question = (
+                "<s>[INST] Pay attention and remember information below, "
+                "which will help to answer the question or imperative after the context ends. "
+                f"Context: {context}. "
+                "According to only the information in the document sources provided within the context above, "
+                "the payment frequency is [/INST]"
+            )
+            if model_type.startswith("llama"):
+                answer = llm.completion(question)
+                current_result.append(answer)
+            elif model_type.startswith("gpt"):
+                answer =llm.function_completion(question)
+                current_result.append(answer['payment_frequency'])
+        results.append(pd.DataFrame(current_result))
+
+    outputs_dir = os.path.join(os.path.dirname(__file__), "../../results")
+    output_path = os.path.join(outputs_dir, f"frequency_logit_processing.csv")
+
+    df = pd.concat(results, axis=1)
+    df.columns = ['input'] + model_types
+    df.to_csv(output_path, index=False)
 
 
 if __name__ == '__main__':

@@ -91,6 +91,20 @@ class GptNativeLlm(Llm):
                     },
                     "required": ["first_unadjusted_payment_date", "last_unadjusted_payment_date", "payment_frequency"],
                 },
+            },
+            {
+                "name": "get_payment_frequency",
+                "description": "Extract payment frequency from description",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "payment_frequency": {
+                            "type": "string",
+                            "description": "Payment frequency expressed as one word",
+                        },
+                    },
+                    "required": ["payment_frequency"],
+                },
             }
         ]
         response = openai.ChatCompletion.create(
