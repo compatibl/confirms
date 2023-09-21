@@ -66,7 +66,7 @@ def test_parameters_extraction():
         (
             'Maturity Date: 18-July-2033. '
             'Interest Payment Date: Interest payments shall be made quarterly on each 18th day of the months of '
-            'April, July, October and January, commencing October 18, 2023, and ending on the Maturity Date.'''
+            'April, July, October and January, commencing October 18, 2023, and ending on the Maturity Date.'
         ),
         (
             'Issue Date: 9 July 2009 (Settlement Date). '
@@ -84,7 +84,7 @@ def test_parameters_extraction():
             'Subject to the occurrence of certain Extraordinary Events, Interest, if any, will be payable on the '
             '27th day of June and December of each year that the Notes remain outstanding (each, an "Interest Payment'
             ' Date") from and including June 27, 2014 to and including the Maturity Date. If any Interest Payment '
-            'Date is not a Business Day, it will be postponed to the next following Business Day'
+            'Date is not a Business Day, it will be postponed to the next following Business Day.'
         ),
     ]
 
