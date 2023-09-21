@@ -22,8 +22,8 @@ from confirms.core.llm.gpt_native_llm import GptNativeLlm
 from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
 
 
-def run_gbnf_enforced_format(*, result_name: str, temperature: Optional[float] = None):
-    """Function completion with GBNF grammar."""
+def run_frequency_extraction(*, result_name: str, temperature: Optional[float] = None):
+    """Function completion for payment frequency extraction."""
 
     results = []
     for seed in range(1, 26):
@@ -64,14 +64,14 @@ def run_gbnf_enforced_format(*, result_name: str, temperature: Optional[float] =
     df.to_csv(output_path, index=False)
 
 
-def test_gbnf_enforced_format():
-    """Test function completion with GBNF grammar with default model settings."""
-    run_gbnf_enforced_format(result_name="frequency_months")
+def test_frequency_extraction():
+    """Test function completion for payment frequency extraction with default model settings."""
+    run_frequency_extraction(result_name="frequency_months")
 
 
-def test_gbnf_enforced_format_temp08():
-    """Test function completion with GBNF grammar with temperature=0.8."""
-    run_gbnf_enforced_format(result_name="frequency_months_temp08", temperature=0.8)
+def test_frequency_extraction_temp08():
+    """Test function completion for payment frequency extraction with temperature=0.8."""
+    run_frequency_extraction(result_name="frequency_months_temp08", temperature=0.8)
 
 
 if __name__ == '__main__':
