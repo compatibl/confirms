@@ -15,7 +15,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from langchain import OpenAI, PromptTemplate, LLMChain
+from langchain import LLMChain, OpenAI, PromptTemplate
 
 from confirms.core.llm.llm import Llm
 

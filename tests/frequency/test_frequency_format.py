@@ -106,12 +106,12 @@ def test_logit_processing():
                 answer = llm.completion(question)
                 current_result.append(answer)
             elif model_type.startswith("gpt"):
-                answer =llm.function_completion(question)
+                answer = llm.function_completion(question)
                 current_result.append(answer['payment_frequency'])
         results.append(pd.DataFrame(current_result))
 
     outputs_dir = os.path.join(os.path.dirname(__file__), "../../results")
-    output_path = os.path.join(outputs_dir, f"frequency_logit_processing.csv")
+    output_path = os.path.join(outputs_dir, "frequency_logit_processing.csv")
 
     df = pd.concat(results, axis=1)
     df.columns = ['input'] + model_types

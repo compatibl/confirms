@@ -49,7 +49,10 @@ def test_function_completion():
         "payment frequency is 6M."
     )
 
-    llama_model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"] # "llama-2-70b-chat.Q4_K_M.gguf"]
+    llama_model_types = [
+        "llama-2-7b-chat.Q4_K_M.gguf",
+        "llama-2-13b-chat.Q4_K_M.gguf",
+    ]  # "llama-2-70b-chat.Q4_K_M.gguf"]
     for model_type in llama_model_types:
         llm = LlamaLangChainLlm(model_type=model_type, temperature=0.0, grammar_file="payment_schedule_params.gbnf")
         prompt = PromptTemplate(template=template, input_variables=["context"])

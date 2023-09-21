@@ -105,7 +105,7 @@ class GptNativeLlm(Llm):
                     },
                     "required": ["payment_frequency"],
                 },
-            }
+            },
         ]
         response = openai.ChatCompletion.create(
             model=self.model_type,
