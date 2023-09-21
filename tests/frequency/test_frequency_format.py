@@ -66,12 +66,12 @@ def run_frequency_extraction(*, result_name: str, temperature: Optional[float] =
 
 def test_frequency_extraction():
     """Test function completion for payment frequency extraction with default model settings."""
-    run_frequency_extraction(result_name="frequency_months")
+    run_frequency_extraction(result_name="frequency_implicit")
 
 
 def test_frequency_extraction_temp08():
     """Test function completion for payment frequency extraction with temperature=0.8."""
-    run_frequency_extraction(result_name="frequency_months_temp08", temperature=0.8)
+    run_frequency_extraction(result_name="frequency_implicit_temp08", temperature=0.8)
 
 
 if __name__ == '__main__':
