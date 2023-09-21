@@ -12,7 +12,7 @@ This package contains research code that can perform AI comprehension of trade
 confirmations, model source code, and model documentation for the purposes of
 model governance.
 
-It supports the following use cases:
+The objective is to support the following use cases:
 
 - Validation of trade capture using LLM comprehension of trade confirmations
 - Validation of model documentation using LLM comprehension of source code
