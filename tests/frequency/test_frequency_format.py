@@ -12,32 +12,66 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+from typing import Optional
+
+import pandas as pd
 import pytest
 
+from confirms.core.llm.gpt_native_llm import GptNativeLlm
 from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
 
 
-def test_gbnf_enforced_format():
+def run_gbnf_enforced_format(*, result_name: str, temperature: Optional[float] = None):
     """Function completion with GBNF grammar."""
 
-    model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]  # , "llama-2-70b-chat.Q4_K_M.gguf"]
-    for model_type in model_types:
-        # TODO: Implement prompt
-        question = (
-            "```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, Interest Payment Dates: The 9th "
-            "of each January, April, July, and October commencing 9 October 2009 with a final payment on the "
-            "Maturity Date.```"
-        )
-        request = (
-            "<s>[INST] Pay attention and remember information below, "
-            "which will help to answer the question or imperative after the context ends. "
-            f"Context: {question}. "
-            f"According to only the information in the document sources provided within the context above, "
-            f"the payment frequency is [/INST]"
-        )
-        llm = LlamaLangChainLlm(model_type=model_type, temperature=0.2)  # , grammar_file="frequency.gbnf")
-        answer = llm.completion(request)
-        print(answer)
+    results = []
+    for seed in range(1, 26):
+        cur_result = {}
+        model_types = ["gpt-3.5-turbo", "gpt-4", "llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
+        # , "llama-2-70b-chat.Q4_K_M.gguf"]
+        for model_type in model_types:
+            # TODO: Implement prompt
+            question = (
+                "```Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, "
+                "Interest Payment Dates: The 9th of each January, April, July, and October "
+                "commencing 9 October 2009 with a final payment on the Maturity Date.```"
+            )
+            request = (
+                "<s>[INST] Pay attention and remember information below, "
+                "which will help to answer the question or imperative after the context ends. "
+                f"Context: {question}. "
+                f"According to only the information in the document sources provided within the context above, "
+                f"the payment frequency is [/INST]"
+            )
+            if model_type.startswith("llama"):
+                llm = LlamaLangChainLlm(
+                    model_type=model_type, temperature=temperature, seed=seed
+                )  # , grammar_file="frequency.gbnf")
+            elif model_type.startswith("gpt"):
+                llm = GptNativeLlm(model_type=model_type, temperature=temperature)
+            else:
+                raise RuntimeError(f"Unknown model type: {model_type}")
+
+            answer = llm.completion(request)
+            cur_result[model_type] = answer
+        results.append(pd.DataFrame([cur_result]))
+
+    outputs_dir = os.path.join(os.path.dirname(__file__), "../../results")
+    output_path = os.path.join(outputs_dir, f"{result_name}.csv")
+
+    df = pd.concat(results)
+    df.to_csv(output_path, index=False)
+
+
+def test_gbnf_enforced_format():
+    """Test function completion with GBNF grammar with default model settings."""
+    run_gbnf_enforced_format(result_name="frequency_months")
+
+
+def test_gbnf_enforced_format_temp08():
+    """Test function completion with GBNF grammar with temperature=0.8."""
+    run_gbnf_enforced_format(result_name="frequency_months_temp08", temperature=0.8)
 
 
 if __name__ == '__main__':

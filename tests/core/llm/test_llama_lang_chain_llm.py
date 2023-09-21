@@ -117,7 +117,7 @@ def test_parameters_extraction():
             }
             results.append(pd.DataFrame([current_dict]))
         all_results[model_type] = pd.concat(results)
-    outputs_dir = os.path.join(os.path.dirname(__file__), "../../../outputs")
+    outputs_dir = os.path.join(os.path.dirname(__file__), "../../../results")
     output_path = os.path.join(outputs_dir, "test_parameters_extraction.csv")
 
     # TODO: Refactor saving of results
