@@ -34,29 +34,29 @@ def test_smoke():
 def test_function_completion():
     """Function completion"""
 
-    llama_model_types = [
-        "llama-2-7b-chat.Q4_K_M.gguf"
-    ]  # , "llama-2-13b-chat.Q4_K_M.gguf", "llama-2-70b-chat.Q4_K_M.gguf"]
+    template = (
+        "Act as a trade entry specialist whose goal is to extract parameters for a function "
+        "generating interest rate schedule from the text specified by the user. "
+        "These parameters are first_unadjusted_payment_date, last_unadjusted_payment_date, and"
+        "payment_frequency."
+        "Provide response only using the text specified by the user."
+        "Do not make up answers. Use ISO 8601 format for dates, namely YYYY-MM-DD, in your answer."
+        "Context: {context}"
+    )
+    context = (
+        "First unadjusted payment date is on January 15, 2000, "
+        "last unadjusted payment date is on January 15, 2005, and "
+        "payment frequency is 6M."
+    )
+
+    llama_model_types = ["llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"] # "llama-2-70b-chat.Q4_K_M.gguf"]
     for model_type in llama_model_types:
-        prompt = (
-            "Act as a trade entry specialist whose goal is to extract parameters for a function "
-            "generating interest rate schedule from the text specified by the user. "
-            "These parameters are first_unadjusted_payment_date, last_unadjusted_payment_date, and"
-            "payment_frequency."
-            "Provide response only using the text specified by the user."
-            "Do not make up answers. Use ISO 8601 format for dates, namely YYYY-MM-DD, in your answer."
-        )
-        question = (
-            "First unadjusted payment date is on January 15, 2000, "
-            "last unadjusted payment date is on January 15, 2005, and "
-            "payment frequency is 6M."
-        )
         llm = LlamaLangChainLlm(model_type=model_type, temperature=0.0, grammar_file="payment_schedule_params.gbnf")
-        answer = llm.completion(question, prompt=prompt)
-        pass
-        # assert answer["first_unadjusted_payment_date"] == "2000-01-15"
-        # assert answer["last_unadjusted_payment_date"] == "2005-01-15"
-        # assert answer["payment_frequency"] == "6M"
+        prompt = PromptTemplate(template=template, input_variables=["context"])
+        answer = llm.completion(context, prompt=prompt).split(',')
+        assert answer[0].split('=')[1] == "2000-01-15"
+        assert answer[1].split('=')[1] == "2005-01-15"
+        assert answer[2].split('=')[1] == "6M"
 
 
 def test_parameters_extraction():
