@@ -19,7 +19,7 @@ import pandas as pd
 import pytest
 from langchain import PromptTemplate
 
-from confirms.core.llm.gpt_native_llm import GptNativeLlm
+from confirms.core.llm.gpt_lang_chain_llm import GptLangChainLlm
 from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
 
 
@@ -40,7 +40,7 @@ def run_frequency_extraction(*, result_name: str, temperature: Optional[float] =
     )
 
     results = []
-    for seed in range(1, 26):
+    for seed in range(1, 2):
         cur_result = {}
         model_types = ["gpt-3.5-turbo", "gpt-4", "llama-2-7b-chat.Q4_K_M.gguf", "llama-2-13b-chat.Q4_K_M.gguf"]
         # , "llama-2-70b-chat.Q4_K_M.gguf"]
@@ -48,7 +48,7 @@ def run_frequency_extraction(*, result_name: str, temperature: Optional[float] =
             if model_type.startswith("llama"):
                 llm = LlamaLangChainLlm(model_type=model_type, temperature=temperature, seed=seed)
             elif model_type.startswith("gpt"):
-                llm = GptNativeLlm(model_type=model_type, temperature=temperature)
+                llm = GptLangChainLlm(model_type=model_type, temperature=temperature)
             else:
                 raise RuntimeError(f"Unknown model type: {model_type}")
 

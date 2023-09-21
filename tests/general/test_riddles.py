@@ -19,7 +19,7 @@ import pandas as pd
 import pytest
 from langchain import PromptTemplate
 
-from confirms.core.llm.gpt_native_llm import GptNativeLlm
+from confirms.core.llm.gpt_lang_chain_llm import GptLangChainLlm
 from confirms.core.llm.llama_lang_chain_llm import LlamaLangChainLlm
 
 
@@ -43,7 +43,7 @@ def run_sally_riddle(*, result_name: str, temperature: Optional[float] = None):
             if model_type.startswith("llama"):
                 llm = LlamaLangChainLlm(model_type=model_type, temperature=temperature, seed=seed)
             elif model_type.startswith("gpt"):
-                llm = GptNativeLlm(model_type=model_type, temperature=temperature)
+                llm = GptLangChainLlm(model_type=model_type, temperature=temperature)
             else:
                 raise RuntimeError(f"Unknown model type: {model_type}")
 
@@ -82,7 +82,7 @@ def run_apples_riddle(*, result_name: str, temperature: Optional[float] = None):
             if model_type.startswith("llama"):
                 llm = LlamaLangChainLlm(model_type=model_type, temperature=temperature, seed=seed)
             elif model_type.startswith("gpt"):
-                llm = GptNativeLlm(model_type=model_type, temperature=temperature)
+                llm = GptLangChainLlm(model_type=model_type, temperature=temperature)
             else:
                 raise RuntimeError(f"Unknown model type: {model_type}")
 
@@ -110,12 +110,12 @@ def test_sally_riddle_temp08():
 
 def test_apples_riddle():
     """Test for solving apples in a box riddle with default model settings."""
-    run_sally_riddle(result_name="apples_riddle")
+    run_apples_riddle(result_name="apples_riddle")
 
 
 def test_apples_riddle_temp08():
     """Test for solving apples in a box riddle with temperature=0.8."""
-    run_sally_riddle(result_name="apples_riddle_temp08", temperature=0.8)
+    run_apples_riddle(result_name="apples_riddle_temp08", temperature=0.8)
 
 
 if __name__ == '__main__':

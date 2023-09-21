@@ -15,7 +15,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from langchain import OpenAI
+from langchain import OpenAI, PromptTemplate, LLMChain
 
 from confirms.core.llm.llm import Llm
 
@@ -45,12 +45,15 @@ class GptLangChainLlm(Llm):
                 model_name=self.model_type, temperature=self.temperature if self.temperature is not None else 0.0
             )
 
-    def completion(self, question: str, *, prompt: Optional[str] = None) -> str:
+    def completion(self, question: str, *, prompt: Optional[PromptTemplate] = None) -> str:
         """Simple completion with optional prompt."""
 
         # Load model (multiple calls do not need to reload)
         self.load_model()
 
-        # TODO: No prompt yet
-        answer = self._llm(question)
+        if prompt is None:
+            answer = self._llm(question)
+        else:
+            llm_chain = LLMChain(prompt=prompt, llm=self._llm)
+            answer = llm_chain.run(question)
         return answer
