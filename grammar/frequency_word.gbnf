@@ -1,0 +1,2 @@
+root           ::= "payment_frequency=" word
+word           ::= [a-zA-Z]+
