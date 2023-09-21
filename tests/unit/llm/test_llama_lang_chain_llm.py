@@ -64,23 +64,21 @@ def test_parameters_extraction():
 
     contexts = [
         (
+            "Maturity Date: 18-July-2033. "
             "Interest Payment Date: Interest payments shall be made quarterly on each 18th day of the months of "
-            "April, July, October and January, commencing October 18, 2023."
+            "April, July, October and January, commencing October 18, 2023, and ending on the Maturity Date."""
         ),
         (
-            "Settlement Date: 18-July-2023, Interest Payment Date: Interest payments shall be made quarterly on each "
-            "18th day of the months of April, July, October and January, commencing October 18, 2023. Total number of "
-            "payments is five."
+            "Issue Date: 9 July 2009 (Settlement Date). "
+            "Maturity Date: 9 July 2013."
+            "Interest Payment Dates: The 9th of each January, April, July, and October "
+            "commencing 9 October 2009 with a final payment on the Maturity Date."
         ),
         (
-            "Issue Date: 9 July 2009 (Settlement Date), Maturity Date: 9 July 2013, Interest Payment Dates: The 9th "
-            "of each January, April, July, and October commencing 9 October 2009 with a final payment on the "
-            "Maturity Date."
-        ),
-        (
-            "Issue Date: On or about December 27, 2013, Maturity Date and Term: On or about December 27, 2023, "
-            "resulting in a term to maturity of approximately 10 years. The $100 principal amount (the 'Principal "
-            "Amount') will only be payable at maturity. For further information, see 'Payments under the Notes'.,"
+            "Issue Date: On or about December 27, 2013."
+            "Maturity Date and Term: On or about December 27, 2023, resulting in a term to maturity "
+            "of approximately 10 years. The $100 principal amount (the 'Principal "
+            "Amount') will only be payable at maturity. For further information, see 'Payments under the Notes'. "
             "Interest Payment Date: The first Interest payment, if any, shall be made on June 27, 2014, following "
             "which Holders of the Notes will be entitled to receive semi-annual Interest payments, if any. "
             "Subject to the occurrence of certain Extraordinary Events, Interest, if any, will be payable on the "
