@@ -29,6 +29,21 @@ def two_times_two():
         len(TOKENS(ANSWER)) == 1
     '''
 
+
+@lmql.query
+def two_times_two_int_constraint():
+    # TODO Document results for
+    #   Two times two is: [N]"
+    #   Two times two: [N]"
+    '''lmql
+    argmax
+       "Two times two=[N]"
+    from
+       'openai/text-ada-001'
+    where
+        INT(N)
+    '''
+
 async def look_up(term):
     # looks up term on wikipedia
     url = f"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles={term}&origin=*"
@@ -59,6 +74,17 @@ def test_smoke():
     result = int(response[0].variables["ANSWER"])
     assert prompt == "Two times two=4\n"
     assert result == 4
+
+
+def test_int_constraint():
+    """Test int constraint."""
+
+    response = two_times_two_int_constraint()
+    prompt = response[0].prompt
+    result = response[0].variables["N"]
+    assert prompt == "Two times two=4"
+    assert result == 4
+    pass
 
 
 def test_rag():
