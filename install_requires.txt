@@ -1,4 +1,5 @@
 aiohttp>=3.8.5
+chromadb>=0.4.12
 faiss-cpu>=1.7.4
 guidance>=0.0.64
 huggingface-hub>=0.17.1
