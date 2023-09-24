@@ -1,3 +1,4 @@
+aiohttp>=3.8.5
 guidance>=0.0.64
 huggingface-hub>=0.17.1
 jsonformer>=0.12.0

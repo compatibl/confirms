@@ -14,6 +14,7 @@
 
 import pytest
 import lmql
+import aiohttp
 import confirms.core.settings
 
 
@@ -28,6 +29,27 @@ def two_times_two():
         len(TOKENS(ANSWER)) == 1
     '''
 
+async def look_up(term):
+    # looks up term on wikipedia
+    url = f"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles={term}&origin=*"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            # get the first sentence on first page
+            page = (await response.json())["query"]["pages"]
+            return list(page.values())[0]["extract"].split(".")[0]
+@lmql.query
+def greet(term):
+    '''lmql
+    argmax
+        """Greet {term} ({await look_up(term)}):
+        Hello[WHO]
+        """
+    from
+        "openai/text-davinci-003"
+    where
+        STOPS_AT(WHO, "\n")
+    '''
+
 
 def test_smoke():
     """Confirm that lmql package is installed correctly."""
@@ -37,6 +59,17 @@ def test_smoke():
     result = int(response[0].variables["ANSWER"])
     assert prompt == "Two times two=4\n"
     assert result == 4
+
+
+def test_rag():
+    """Test retrieval augmentation."""
+
+    response = greet("Earth")
+    prompt = response[0].prompt
+    result = response[0].variables["WHO"]
+    print(prompt)
+    print(result)
+    pass
 
 
 if __name__ == '__main__':
