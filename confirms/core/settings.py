@@ -50,7 +50,7 @@ class Settings:
     model_dir: str = field(default=None)
     """Models are located in model_dir/model_name where model_name is either filename or directory name."""
 
-    def get_model_path(self, model_name: str) -> str:
+    def get_model_path(self, model_name: str, *, check_exists: Optional[bool] = True) -> str:
         """Get model path from model name using model_dir or its default value project_root/models,
         and check that it exists.
 
@@ -61,6 +61,7 @@ class Settings:
         - When model is a file, it should not
         """
         model_path = os.path.join(self.model_dir, model_name)
-        if not os.path.exists(model_path):
+        if check_exists and not os.path.exists(model_path):
             raise RuntimeError(f"Model path {model_path} does not exist.")
         return model_path
+
