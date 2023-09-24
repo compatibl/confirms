@@ -11,6 +11,7 @@ numpy>=1.26.0
 openai>=0.28.0
 protobuf>=4.24.3
 python-dotenv>=1.0.0
+sentence-transformers>=2.2.2
 sentencepiece>=0.1.99
 tiktoken>=0.5.1
 torch>=2.0.1
