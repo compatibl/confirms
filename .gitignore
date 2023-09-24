@@ -13,7 +13,7 @@ syntax: glob
 *.so
 build/
 dist/
-downloads/
+models/
 
 # Using regexp syntax
 syntax: regexp

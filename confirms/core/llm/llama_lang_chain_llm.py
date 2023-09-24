@@ -22,6 +22,7 @@ from langchain.callbacks import StreamingStdOutCallbackHandler
 from langchain.callbacks.manager import CallbackManager
 
 from confirms.core.llm.llm import Llm
+from confirms.core.settings import Settings
 
 
 @dataclass
@@ -54,15 +55,15 @@ class LlamaLangChainLlm(Llm):
             else:
                 raise RuntimeError(f"Repo not specified for model type {self.model_type}")
 
-            model_dir = os.path.join(os.path.dirname(__file__), "../../../downloads")
-            model_path = os.path.join(model_dir, model_filename)
+            settings = Settings()
+            model_path = settings.get_model_path(model_filename, check_exists=False)
             if not os.path.exists(model_path):
                 print(
-                    f"Model file {model_filename} not found in `project_root/downloads` directory,"
-                    f"downloading from Hugging Face. This can some time depending on network speed."
+                    f"Model {model_filename} is not found in {model_path} and will be downloaded from Hugging Face."
+                    f"This may take from tens of minutes to hours time depending on network speed."
                 )
                 hf_hub_download(
-                    repo_id=repo_id, filename=model_filename, local_dir=model_dir, local_dir_use_symlinks=False
+                    repo_id=repo_id, filename=model_filename, local_dir=settings.model_dir, local_dir_use_symlinks=False
                 )
 
             if self.grammar_file is not None:
