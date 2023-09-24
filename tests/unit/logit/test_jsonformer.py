@@ -19,7 +19,7 @@ from confirms.core.settings import Settings
 
 
 def test_smoke():
-    """Run a smoke test for Jsonformer."""
+    """Confirm that jsonformer package is installed correctly."""
 
     settings = Settings()
     model_name = "Llama-2-7b-chat-hf"

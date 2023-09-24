@@ -14,7 +14,6 @@
 
 import pytest
 
-from confirms.core.llm.gpt_lang_chain_llm import GptLangChainLlm
 from confirms.core.llm.gpt_native_llm import GptNativeLlm
 
 
