@@ -13,9 +13,9 @@
 # limitations under the License.
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import List, Optional
 
-from langchain import LLMChain, OpenAI, PromptTemplate
+from langchain import LLMChain, OpenAI, PromptTemplate, ConversationChain
 
 from confirms.core.llm.llm import Llm
 
@@ -57,3 +57,15 @@ class GptLangChainLlm(Llm):
             llm_chain = LLMChain(prompt=prompt, llm=self._llm)
             answer = llm_chain.run(question)
         return answer
+
+    def run_conversation_chain(self, prompts: List[str]):
+
+        # Load model (multiple calls do not need to reload)
+        self.load_model()
+
+        results = []
+        conversation = ConversationChain(llm=self._llm)
+        for prompt in prompts:
+            results.append(conversation.run(prompt))
+
+        return results
