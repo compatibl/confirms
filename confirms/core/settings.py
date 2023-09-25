@@ -58,6 +58,15 @@ class Settings:
         # TODO: Pass OpenAI key to each method to allow code with different settings to run in parallel
         openai.api_key = self.openai_api_key
 
+    @staticmethod
+    def load() -> None:
+        """Syntactic sugar for creating an instance of Settings class to read .env file
+        or environment variable and set global settings such as OpenAI key."""
+
+        # Creating the object reads from .env or environment variables
+        # and sets global settings such as OpenAI key.
+        Settings()
+
     def get_model_path(self, model_name: str, *, check_exists: Optional[bool] = True) -> str:
         """Get model path from model name using model_dir or its default value project_root/models,
         and check that it exists.

@@ -35,7 +35,6 @@ def test_smoke():
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
     openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-        api_key=settings.openai_api_key,
         model_name="text-embedding-ada-002"
     )
     sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")

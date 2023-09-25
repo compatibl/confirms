@@ -19,6 +19,7 @@ from typing import Dict, Optional
 import openai
 
 from confirms.core.llm.llm import Llm
+from confirms.core.settings import Settings
 
 
 @dataclass
@@ -61,6 +62,9 @@ class GptNativeLlm(Llm):
 
     def function_completion(self, question: str, *, prompt: Optional[str] = None) -> Dict[str, str]:
         """Completion with functions."""
+
+        # Load settings
+        Settings.load()
 
         if prompt is not None:
             messages = [{"role": "system", "content": prompt}]
