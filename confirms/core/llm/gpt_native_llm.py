@@ -49,6 +49,9 @@ class GptNativeLlm(Llm):
     def completion(self, question: str, *, prompt: Optional[str] = None) -> str:
         """Simple completion with optional prompt."""
 
+        # Load settings
+        Settings.load()
+
         if prompt is not None:
             messages = [{"role": "system", "content": prompt}]
         else:
