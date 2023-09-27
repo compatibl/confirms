@@ -25,6 +25,9 @@ from dotenv import load_dotenv
 class Settings:
     """Default settings may be modified before the settings object is passed to the model."""
 
+    gpu_ram_gb: int = field(default=None)
+    """GPU RAM in GB is used to determine if a given model can be offloaded to GPU."""
+
     model_dir: str = field(default=None)
     """Models are located in model_dir/model_name where model_name is either filename or directory name."""
 
@@ -37,6 +40,13 @@ class Settings:
         # Load additional environment variables from .env file during import of this module,
         # Do not override the environment variables
         load_dotenv(override=False)
+
+        # Check environment variable first
+        self.gpu_ram_gb = int(os.getenv("CONFIRMS_GPU_RAM_GB"))
+
+        # If not set, set to 0
+        if self.gpu_ram_gb is None:
+            self.gpu_ram_gb = 0
 
         # Check environment variable first
         self.model_dir = os.getenv("CONFIRMS_MODEL_DIR")

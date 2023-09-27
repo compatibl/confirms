@@ -43,19 +43,25 @@ class LlamaLangChainLlm(Llm):
     def load_model(self, grammar_name: str = None):
         """Load model after fields have been set."""
 
+        settings = Settings()
+
         # Skip if already loaded
         if self._llm is None:
+
+            # Set repo_id and GPU layers based on name
             model_filename = self.model_type
             if model_filename.startswith("llama-2-7b-chat."):
                 repo_id = "TheBloke/Llama-2-7B-chat-GGUF"
+                n_gpu_layers = 9999 if settings.gpu_ram_gb >= 16 else 0
             elif model_filename.startswith("llama-2-13b-chat."):
                 repo_id = "TheBloke/Llama-2-13B-chat-GGUF"
+                n_gpu_layers = 9999 if settings.gpu_ram_gb >= 16 else 0
             elif model_filename.startswith("llama-2-70b-chat."):
                 repo_id = "TheBloke/Llama-2-70B-chat-GGUF"
+                n_gpu_layers = 9999 if settings.gpu_ram_gb >= 16 else 0
             else:
                 raise RuntimeError(f"Repo not specified for model type {self.model_type}")
 
-            settings = Settings()
             model_path = settings.get_model_path(model_filename, check_exists=False)
             if not os.path.exists(model_path):
                 print(
@@ -76,7 +82,7 @@ class LlamaLangChainLlm(Llm):
             self._llm = LlamaCpp(
                 model_path=model_path,
                 temperature=self.temperature if self.temperature is not None else 0.2,
-                n_gpu_layers=0,  # Change to the value appropriate for the GPU RAM size if using GPU
+                n_gpu_layers=n_gpu_layers,
                 max_tokens=1024,
                 top_p=0.85,
                 top_k=70,
