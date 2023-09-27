@@ -17,3 +17,5 @@ models/
 
 # Using regexp syntax
 syntax: regexp
+
+/tests/embedding/test_embedding.pdf
