@@ -62,7 +62,7 @@ class Settings:
 
         # Package: OpenAI
 
-        self.openai_api_key = os.getenv("CONFIRMS_OPENAI_API_KEY")
+        self.openai_api_key = os.getenv("OPENAI_API_KEY")
 
         # Set OpenAI key explicitly because it does not automatically load the variables set by load_dotenv()
         # TODO: Pass OpenAI key to each method to allow code with different settings to run in parallel
