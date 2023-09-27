@@ -19,6 +19,13 @@ The objective is to support the following use cases:
 - Validation of source code, identifying bugs and deviations from the approved methodology
 - LLM generation of model documentation and release note drafts
 
+## Installation on GPU
+
+- Set environment variables FORCE_CMAKE=1;CMAKE_ARGS=-DLLAMA_CUBLAS=on
+- Note: In PyCharm, use Settings > Tools > Terminal > Environment variables
+- Run 'pip install --upgrade --force-reinstall llama-cpp-python --no-cache-dir'
+- After this run 'pip install -r requirements.txt'
+
 ## Copyright
 
 Each individual contributor holds copyright over their contributions to the
