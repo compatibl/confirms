@@ -11,70 +11,81 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 import pytest
-import chromadb
-from chromadb.utils import embedding_functions
-from chromadb import Documents, EmbeddingFunction, Embeddings
+from langchain import FAISS
+from langchain.document_loaders import PyPDFLoader
+from langchain.embeddings import HuggingFaceEmbeddings, HuggingFaceInstructEmbeddings, OpenAIEmbeddings
+from langchain.schema.embeddings import Embeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 from confirms.core.settings import Settings
 
 
-class CustomEmbeddingFunction(EmbeddingFunction):
-    def __call__(self, texts: Documents) -> Embeddings:
-        # TODO: Implement sample function
-        embeddings = [1.0, 2.0]
-        return embeddings
-
-
-def test_smoke():
-    """Test for embedding experiments."""
-
-    settings = Settings()
-    huggingface_ef = embedding_functions.HuggingFaceEmbeddingFunction(
-        api_key="YOUR_API_KEY",
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
-    )
-    openai_ef = embedding_functions.OpenAIEmbeddingFunction(model_name="text-embedding-ada-002")
-    sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
-    custom_ef = CustomEmbeddingFunction()
-
-    # client = chromadb.Client(chromadb.config.Settings(chroma_db_impl="duckdb+parquet", persist_directory="db/"))
-    client = chromadb.Client()  # In-memory
-    collection = client.create_collection(name="Students")
-
-    student_info = """
-    Alexandra Thompson, a 19-year-old computer science sophomore with a 3.7 GPA,
-    is a member of the programming and chess clubs who enjoys pizza, swimming, and hiking
-    in her free time in hopes of working at a tech company after graduating from the University of Washington.
+def run_similarity_search_for_document(embeddings: Embeddings, filename: str, query: str, chunk_size: int,
+                                       chunk_overlap: int, top_k: int = None):
     """
+    Perform similarity search on a PDF document.
 
-    club_info = """
-    The university chess club provides an outlet for students to come together and enjoy playing
-    the classic strategy game of chess. Members of all skill levels are welcome, from beginners learning
-    the rules to experienced tournament players. The club typically meets a few times per week to play casual games,
-    participate in tournaments, analyze famous chess matches, and improve members' skills.
+    Args:
+        embeddings (Embeddings): Embedding model.
+        filename (str): The path to the PDF file.
+        query (str): The query string to search for similarity.
+        chunk_size (int): The size of text chunks for splitting the document.
+        chunk_overlap (int): The overlap between text chunks.
+        top_k (int, optional): The number of top matching segments to retrieve. If None, retrieves all segments.
     """
+    # Load PDF document
+    document = PyPDFLoader(filename).load()
+    # Split text into chunks
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    # Split document into segments
+    documents = text_splitter.split_documents(document)
+    # Create FAISS index
+    db = FAISS.from_documents(documents, embeddings, distance_strategy="EUCLIDEAN_DISTANCE")
+    # Perform similarity search
+    results = db.similarity_search_with_score(query, k=len(documents) if top_k is None else top_k)
+    # Display results
+    for result in results:
+        print(result[1]) # Similarity score
+        print('---------')
+        print(result[0].page_content)
+        print('---------') # Content of the segment
 
-    university_info = """
-    The University of Washington, founded in 1861 in Seattle, is a public research university
-    with over 45,000 students across three campuses in Seattle, Tacoma, and Bothell.
-    As the flagship institution of the six public universities in Washington state,
-    UW encompasses over 500 buildings and 20 million square feet of space,
-    including one of the largest library systems in the world.
-    """
 
-    collection.add(
-        documents=[student_info, club_info, university_info],
-        metadatas=[{"source": "student info"}, {"source": "club info"}, {'source': 'university info'}],
-        ids=["id1", "id2", "id3"]
-    )
+def run_maturity_date_extraction(embeddings: Embeddings):
+    file_path = 'test_embedding.pdf'
+    if not os.path.isfile(file_path):
+        raise Exception(f"The file '{file_path}' does not exist. Please add a file with this name in this directory.")
+    chunk_size = 500
+    chunk_overlap = 50
 
-    results = collection.query(
-        query_texts=["What is the student name?"],
-        n_results=2
-    )
+    run_similarity_search_for_document(embeddings, file_path, 'Maturity Date:', chunk_size, chunk_overlap, 5)
+    print('=====')
+    run_similarity_search_for_document(embeddings, file_path, 'What is maturity date?', chunk_size, chunk_overlap, 5)
+    print('=====')
+    run_similarity_search_for_document(embeddings, file_path, 'Extract maturity date.', chunk_size, chunk_overlap, 5)
 
-    print(results)
+
+def test_maturity_date_extraction_hf():
+    """Maturity date extraction test for hugging face embeddings"""
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    run_maturity_date_extraction(embeddings)
+
+
+def test_maturity_date_extraction_instruct():
+    """Maturity date extraction test for hugging face instruct embeddings"""
+    embeddings = HuggingFaceInstructEmbeddings(model_name='hkunlp/instructor-xl')
+    run_maturity_date_extraction(embeddings)
+
+
+def test_maturity_date_extraction_ada():
+    """Maturity date extraction test for OpenAI embeddings"""
+    # Load settings
+    Settings.load()
+    embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+    run_maturity_date_extraction(embeddings)
 
 
 if __name__ == '__main__':
