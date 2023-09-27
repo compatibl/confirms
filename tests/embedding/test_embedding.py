@@ -83,8 +83,8 @@ def test_maturity_date_extraction_instruct():
 def test_maturity_date_extraction_ada():
     """Maturity date extraction test for OpenAI embeddings"""
     # Load settings
-    Settings.load()
-    embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+    settings = Settings()
+    embeddings = OpenAIEmbeddings(model="text-embedding-ada-002", openai_api_key=settings.openai_api_key)
     run_maturity_date_extraction(embeddings)
 
 
