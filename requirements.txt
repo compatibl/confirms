@@ -1,7 +1,7 @@
-# Package installation requirements in setup.py
--r install_requires.txt
+# Core requirements in setup.py
+-r install_requirements.txt
 
-# Development, build and test requirements
+# Additional development, build and test requirements
 black>=22.6.0
 build>=0.8.0
 flake8>=4.0.1

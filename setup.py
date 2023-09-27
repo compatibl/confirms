@@ -3,8 +3,8 @@ import setuptools
 with open('./README.md', 'r') as readme_file:
     readme = readme_file.read()
 
-with open('./install_requires.txt') as install_requires_file:
-    install_requires = [line.strip() for line in install_requires_file.readlines()]
+with open('./install_requirements.txt') as install_requirements:
+    install_requires = [line.strip() for line in install_requirements.readlines()]
 
 setuptools.setup(
     name='confirms',
