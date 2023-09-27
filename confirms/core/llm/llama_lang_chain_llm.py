@@ -58,7 +58,7 @@ class LlamaLangChainLlm(Llm):
                 n_gpu_layers = 9999 if settings.gpu_ram_gb >= 16 else 0
             elif model_filename.startswith("llama-2-70b-chat."):
                 repo_id = "TheBloke/Llama-2-70B-chat-GGUF"
-                n_gpu_layers = 9999 if settings.gpu_ram_gb >= 16 else 0
+                n_gpu_layers = 9999 if settings.gpu_ram_gb >= 48 else 0
             else:
                 raise RuntimeError(f"Repo not specified for model type {self.model_type}")
 
