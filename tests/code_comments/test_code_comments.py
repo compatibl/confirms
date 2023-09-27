@@ -26,6 +26,7 @@ y = x-1
 
 
 def test_code_commenting():
+    """Test code commenting using provided description."""
     code_context = """
     def get_coupon_schedule(start_date, end_date, max_increase, spread):
         coupon_schedule = []

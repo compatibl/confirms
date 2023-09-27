@@ -66,6 +66,7 @@ class GptLangChainLlm(Llm):
         return answer
 
     def run_conversation_chain(self, prompts: List[str]):
+        """Conversation chain with list of prompts."""
 
         # Load model (multiple calls do not need to reload)
         self.load_model()

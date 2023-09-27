@@ -34,9 +34,7 @@ def test_smoke():
         api_key="YOUR_API_KEY",
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
-    openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-        model_name="text-embedding-ada-002"
-    )
+    openai_ef = embedding_functions.OpenAIEmbeddingFunction(model_name="text-embedding-ada-002")
     sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
     custom_ef = CustomEmbeddingFunction()
 
@@ -76,8 +74,7 @@ def test_smoke():
         n_results=2
     )
 
-    results
-    pass
+    print(results)
 
 
 if __name__ == '__main__':

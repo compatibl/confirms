@@ -75,7 +75,7 @@ class Settings:
         where model_dir is CONFIRMS_MODEL_DIR environment variable or project_root/models when not set.
 
         - When model is a file, model_name should include extension
-        - When model is a file, it should not
+        - When model is a directory, it should not
         """
 
         model_path = os.path.join(self.model_dir, model_name)

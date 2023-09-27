@@ -15,7 +15,6 @@
 import pytest
 import lmql
 import aiohttp
-import confirms.core.settings
 
 
 @lmql.query
@@ -44,6 +43,7 @@ def two_times_two_int_constraint():
         INT(N)
     '''
 
+
 async def look_up(term):
     # looks up term on wikipedia
     url = f"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles={term}&origin=*"
@@ -52,6 +52,8 @@ async def look_up(term):
             # get the first sentence on first page
             page = (await response.json())["query"]["pages"]
             return list(page.values())[0]["extract"].split(".")[0]
+
+
 @lmql.query
 def greet(term):
     '''lmql

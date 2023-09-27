@@ -39,7 +39,6 @@ def test_smoke():
         # where_document={"$contains":"search_string"}  # optional filter
     )
     print(results)
-    pass
 
 
 if __name__ == '__main__':

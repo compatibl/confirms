@@ -4,7 +4,7 @@ This directory (project_root/models) is where models are stored. Individual
 models are located in project_root/models/model_name
 
 - When model is a file, model_name should include extension
-- When model is a file, it should not
+- When model is a directory, it should not
 
 For open source models only, when the model is not found in 
 
