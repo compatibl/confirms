@@ -8,9 +8,9 @@ with open('./install_requirements.txt') as install_requirements:
 
 setuptools.setup(
     name='confirms',
-    version='0.1',
+    version='0.2.0',
     author='The Project Contributors',
-    description='Model Governance AI for Trade Confirmations',
+    description='Comprehension of trade term sheets and confirmations',
     license='Apache Software License',
     long_description=readme,
     long_description_content_type='text/markdown',
